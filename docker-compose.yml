@@ -9,31 +9,29 @@ services:
     ports:
       - "6210:6210"
     environment:
-      # Database Configuration
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_PATH=${DB_PATH}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-
-      # Server Configuration
-      - PORT=${SERVER_PORT}
-      - FRONTEND_URL=${FRONTEND_URL}
-      - SECRET_KEY=${SECRET_KEY}
-      - PUBLIC_KEY=${PUBLIC_KEY}
-
-      # Logging Configuration
-      - LOG_FILE=${LOG_FILE}
-      - LOG_FORMAT=${LOG_FORMAT}
-      - LOG_SIZE=${LOG_SIZE}
-      - LOG_INTERVAL=${LOG_INTERVAL}
+      # Database
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_PATH: ${DB_PATH}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Server
+      PORT: ${SERVER_PORT}
+      FRONTEND_URL: ${FRONTEND_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      PUBLIC_KEY: ${PUBLIC_KEY}
+      # Logging
+      LOG_FILE: ${LOG_FILE}
+      LOG_FORMAT: ${LOG_FORMAT}
+      LOG_SIZE: ${LOG_SIZE}
+      LOG_INTERVAL: ${LOG_INTERVAL}
     volumes:
       - ./server/uploads:/app/uploads
       - ./server/logs:/app/logs
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://10.254.252.91:6210/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://10.254.252.91:6210/', r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -48,16 +46,14 @@ services:
     ports:
       - "6212:80"
     environment:
-      # Frontend Configuration - Build time variables
-      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
-      - VITE_APP_PORT=${VITE_APP_PORT}
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_APP_PORT: ${VITE_APP_PORT}
     depends_on:
-      siai-server:
-        condition: service_healthy
+      - siai-server
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://10.254.252.91:80"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:80 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -67,9 +63,3 @@ networks:
   siai-network:
     driver: bridge
     name: siai-network
-
-volumes:
-  server-uploads:
-    driver: local
-  server-logs:
-    driver: local
