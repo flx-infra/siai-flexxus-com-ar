@@ -1,11 +1,7 @@
-version: "3.8"
+version: "3.9"
 services:
   siai-server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: siai-server
-    restart: unless-stopped
+    image: tu-registro/siai_server:1.0.1
     ports:
       - "6210:6210"
     environment:
@@ -26,40 +22,49 @@ services:
       LOG_SIZE: ${LOG_SIZE}
       LOG_INTERVAL: ${LOG_INTERVAL}
     volumes:
-      - ./server/uploads:/app/uploads
-      - ./server/logs:/app/logs
+      - server-uploads:/app/uploads
+      - server-logs:/app/logs
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"require('http').get('http://10.254.252.91:6210/', r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\""]
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:6210 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
 
   siai-client:
-    build:
-      context: ./cliente
-      dockerfile: Dockerfile
-    container_name: siai-client
-    restart: unless-stopped
+    image: tu-registro/siai_client:1.01
     ports:
       - "6212:80"
     environment:
       VITE_BACKEND_URL: ${VITE_BACKEND_URL}
       VITE_APP_PORT: ${VITE_APP_PORT}
-    depends_on:
-      - siai-server
     networks:
       - siai-network
+    # En Swarm no funciona depends_on. Si necesitás que espere al server:
+    command: >
+      sh -c 'until wget -q -O- http://siai-server:6210/ || sleep 2; do :; done;
+             nginx -g "daemon off;"'
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:80 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
 
 networks:
   siai-network:
-    driver: bridge
-    name: siai-network
+    driver: overlay
+
+volumes:
+  server-uploads:
+  server-logs:
