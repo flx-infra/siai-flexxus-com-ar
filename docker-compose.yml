@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   siai-server:
     image: tu-registro/siai_server:1.0.1
@@ -27,7 +26,7 @@ services:
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:6210 || exit 1"]
+      test: ["CMD-SHELL", "wget --spider -q http://10.254.250.91:6210 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -48,10 +47,10 @@ services:
       - siai-network
     # En Swarm no funciona depends_on. Si necesitás que espere al server:
     command: >
-      sh -c 'until wget -q -O- http://siai-server:6210/ || sleep 2; do :; done;
+      sh -c 'until wget -q -O- http://10.259:6210/ || sleep 2; do :; done;
              nginx -g "daemon off;"'
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:80 || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://110.254.250.91:80 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
