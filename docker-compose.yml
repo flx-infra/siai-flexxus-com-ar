@@ -2,7 +2,7 @@ version: "3.9"
 services:
   siai-server:
     build: ./server
-    image: fabreguesm/siai_server:1.0.1
+    image: fabreguesm/siai_server:1.0.2
     ports:
       - "6210:6210"
     environment:
@@ -40,16 +40,16 @@ services:
 
   siai-client:
     build: ./cliente
-    image: fabreguesm/siai_cliente:1.0.2
+    image: fabreguesm/siai_cliente:1.0.3
     ports:
-      - "6212:80"
+      - "6212:6212"
     environment:
       VITE_BACKEND_URL: http://10.250.0.68:6210
       VITE_APP_PORT: ${VITE_APP_PORT}
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://10.250.0.68:80 || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6212 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
