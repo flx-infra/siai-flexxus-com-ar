@@ -2,7 +2,7 @@ version: "3.9"
 services:
   siai-server:
     build: ./server
-    image: fabreguesm/siai_server:1.0.3
+    image: fabreguesm/siai_server:1.0.4
     ports:
       - "6210:6210"
     environment:
@@ -28,7 +28,7 @@ services:
     networks:
       - traefik
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://10.250.0.68:6210 || exit 1"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:6210 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -40,7 +40,7 @@ services:
 
   siai-client:
     build: ./cliente
-    image: fabreguesm/siai_cliente:1.0.4
+    image: fabreguesm/siai_cliente:1.0.5
     ports:
       - "6212:6212"
     environment:
@@ -49,7 +49,7 @@ services:
     networks:
       - traefik
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://10.250.0.68:6212 || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6212 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
