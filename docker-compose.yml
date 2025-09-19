@@ -2,7 +2,7 @@ version: "3.9"
 services:
   siai-server:
     build: ./server
-    image: fabreguesm/siai_server:1.0.2
+    image: fabreguesm/siai_server:1.0.3
     ports:
       - "6210:6210"
     environment:
@@ -49,7 +49,7 @@ services:
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6212 || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://10.250.0.68:6212 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
