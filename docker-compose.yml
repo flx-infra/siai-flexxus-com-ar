@@ -27,7 +27,7 @@ services:
     networks:
       - siai-network
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://10.250.0.68:6210 || exit 1"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:6210 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -46,12 +46,13 @@ services:
       VITE_APP_PORT: ${VITE_APP_PORT}
     networks:
       - siai-network
-    # En Swarm no funciona depends_on. Si necesitás que espere al server:
+    depends_on:
+      - siai-server
     command: >
-      sh -c 'until wget -q -O- http://10.250.0.68:6210/ || sleep 2; do :; done;
+      sh -c 'until wget -q -O- http://siai-server:6210/ || sleep 2; do :; done;
              nginx -g "daemon off;"'
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://10.250.0.68:80 || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
