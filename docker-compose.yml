@@ -60,7 +60,7 @@ services:
         condition: any
 
 networks:
-  siai-network:
+  traefik:
     driver: bridge
 
 volumes:
