@@ -1,7 +1,7 @@
-version: "3.9"
 services:
   siai-server:
-    image: fabreguesm/siai_server:1.0.1
+    build: ./server
+    image: fabreguesm/siai_server:1.0.2
     ports:
       - "6210:6210"
     environment:
@@ -38,19 +38,15 @@ services:
         condition: any
 
   siai-client:
-    image: fabreguesm/siai_cliente:1.0.1
+    build: ./cliente
+    image: fabreguesm/siai_cliente:1.0.2
     ports:
       - "6212:80"
     environment:
-      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_BACKEND_URL: http://localhost:6210
       VITE_APP_PORT: ${VITE_APP_PORT}
     networks:
       - siai-network
-    depends_on:
-      - siai-server
-    command: >
-      sh -c 'until wget -q -O- http://siai-server:6210/ || sleep 2; do :; done;
-             nginx -g "daemon off;"'
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1"]
       interval: 30s
