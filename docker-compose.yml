@@ -66,8 +66,3 @@ networks:
 volumes:
   server-uploads:
   server-logs:
-
-
-volumes:
-  server-uploads:
-  server-logs:
