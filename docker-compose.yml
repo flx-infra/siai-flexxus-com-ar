@@ -25,6 +25,8 @@ services:
     volumes:
       - server-uploads:/app/uploads
       - server-logs:/app/logs
+    networks:
+      - traefik
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:6210 || exit 1"]
       interval: 30s
@@ -45,7 +47,7 @@ services:
       VITE_BACKEND_URL: http://10.250.0.68:6210
       VITE_APP_PORT: ${VITE_APP_PORT:-6212}
     networks:
-      - siai-network
+      - traefik
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6212 || exit 1"]
       interval: 30s
