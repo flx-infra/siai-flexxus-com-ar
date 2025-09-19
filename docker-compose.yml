@@ -61,7 +61,8 @@ services:
 
 networks:
   traefik:
-    driver: bridge
+    external:
+      name: traefik
 
 volumes:
   server-uploads:
