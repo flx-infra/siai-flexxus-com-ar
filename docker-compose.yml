@@ -2,7 +2,7 @@ version: "3.9"
 services:
   siai-server:
     build: ./server
-    image: fabreguesm/siai_server:1.0.8
+    image: fabreguesm/siai_server:1.0.9
     ports:
       - "6210:6210"
     environment:
