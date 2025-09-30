@@ -25,8 +25,12 @@ services:
     volumes:
       - server-uploads:/app/uploads
       - server-logs:/app/logs
+    logging:
+      driver: loki
+      options:
+        loki-url: ${LOKI_URL}  
     networks:
-      - traefik
+      - traefik   
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:6210 || exit 1"]
       interval: 30s
@@ -34,9 +38,8 @@ services:
       retries: 3
       start_period: 40s
     deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
+      placement:
+        constraints: ["${NODE}"]
 
   siai-client:
     build: ./cliente
@@ -55,15 +58,16 @@ services:
       retries: 3
       start_period: 60s
     deploy:
-      replicas: 1
-      restart_policy:
-        condition: any
-
+      placement:
+        constraints: ["${NODE}"]
+        
 networks:
   traefik:
     external:
       name: traefik
 
 volumes:
-  server-uploads:
-  server-logs:
+  siai-flexxus-com-ar:
+    name: "${SERVICE_NAME}_siai-flexxus-com-ar"
+  siai-flexxus-com-ar:
+    name: "${SERVICE_NAME}_siai-flexxus-com-ar"
