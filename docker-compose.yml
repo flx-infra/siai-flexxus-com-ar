@@ -70,6 +70,4 @@ volumes:
   server-uploads:
   server-logs:
   siai-flexxus-com-ar:
-    name: "${SERVICE_NAME}_siai-flexxus-com-ar"
-  siai-flexxus-com-ar:
-    name: "${SERVICE_NAME}_siai-flexxus-com-ar"
+    name: "${SERVICE_NAME}"
