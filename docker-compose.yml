@@ -43,7 +43,7 @@ services:
 
   siai-client:
     build: ./cliente
-    image: fabreguesm/siai_cliente:1.0.9
+    image: fabreguesm/siai_cliente:1.0.11
     ports:
       - "6212:6212"
     environment:
