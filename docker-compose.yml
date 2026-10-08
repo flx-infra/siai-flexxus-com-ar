@@ -22,6 +22,7 @@ services:
       LOG_FORMAT: ${LOG_FORMAT}
       LOG_SIZE: ${LOG_SIZE}
       LOG_INTERVAL: ${LOG_INTERVAL}
+      AGENT_API_KEY: ${AGENT_API_KEY}
     volumes:
       - server-uploads:/app/uploads
       - server-logs:/app/logs
