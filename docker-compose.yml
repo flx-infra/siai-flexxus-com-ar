@@ -48,7 +48,7 @@ services:
     ports:
       - "6212:6212"
     environment:
-      VITE_BACKEND_URL: http://10.250.0.68:6210
+      VITE_BACKEND_URL: http://10.250.0.98:6210
       VITE_APP_PORT: ${VITE_APP_PORT:-6212}
     networks:
       - traefik
